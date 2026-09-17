@@ -179,15 +179,25 @@ end
 
 -- Wipe Detection
 
-local function CountDeadRaid()
-    if not IsInRaid() then return 0 end
-    local dead = 0
-    for i = 1, GetNumGroupMembers() do
-        local unit = "raid" .. i
-        if UnitExists(unit) and UnitIsDeadOrGhost(unit) then
-            dead = dead + 1
+local function CountDeadGroup()
+    local dead = UnitIsDeadOrGhost("player") and 1 or 0
+
+    if IsInRaid() then
+        for i = 1, GetNumGroupMembers() do
+            local unit = "raid" .. i
+            if UnitExists(unit) and unit ~= "player" and UnitIsDeadOrGhost(unit) then
+                dead = dead + 1
+            end
+        end
+    elseif IsInGroup() then
+        for i = 1, GetNumSubgroupMembers() do
+            local unit = "party" .. i
+            if UnitExists(unit) and UnitIsDeadOrGhost(unit) then
+                dead = dead + 1
+            end
         end
     end
+
     return dead
 end
 
@@ -201,7 +211,7 @@ local function EvaluateWipe()
     if not ShouldGate() then return end
     if not UnitIsDeadOrGhost("player") then return end
 
-    if CountDeadRaid() >= db.wipeThreshold then
+    if CountDeadGroup() >= db.wipeThreshold then
         wipeConfirmed = true
         if not gateActive then StartGate() end
     end
