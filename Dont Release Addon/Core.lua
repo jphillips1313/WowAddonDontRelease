@@ -27,7 +27,8 @@ local SELF_RES_SPELLS = {
 local function HasSelfRes()
     if not db.skipIfSelfRes then return false end
 
-    for _, spellID in ipairs (SELF_RES_SPELLS) do
+    for _, spellID in ipairs(SELF_RES_SPELLS) do
+        -- Buff already on you (e.g. Soulstone)
         if C_UnitAuras and C_UnitAuras.GetAuraDataBySpellName then
             local name = C_Spell.GetSpellName(spellID)
             if name and AuraUtil and AuraUtil.FindAuraByName then
@@ -35,10 +36,13 @@ local function HasSelfRes()
                 if aura then return true end
             end
         end
-    
-        local cd = C_Spell.GetSpellCooldown(spellID)
+
+        -- Only trust the cooldown if you actually know the spell
+        if IsSpellKnown(spellID) then
+            local cd = C_Spell.GetSpellCooldown(spellID)
             if cd and cd.isEnabled and cd.duration == 0 then
-            return true
+                return true
+            end
         end
     end
 
