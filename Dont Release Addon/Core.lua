@@ -22,7 +22,6 @@ local db
 local SELF_RES_SPELLS = {
     20707,
     20608,
-    319352,
 }
 
 local function HasSelfRes()
@@ -39,7 +38,7 @@ local function HasSelfRes()
     
         local cd = C_Spell.GetSpellCooldown(spellID)
             if cd and cd.isEnabled and cd.duration == 0 then
-            return tru
+            return true
         end
     end
 
@@ -84,6 +83,14 @@ local function ApplyLock()
     if btn then
         btn:Disable()
         if btn.SetAlpha then btn:SetAlpha(0.4) end
+    end
+end
+
+local function ApplyUnlock()
+    local btn = GetDeathPopupButton()
+    if btn then
+        btn:Enable()
+        if btn.SetAlpha then btn:SetAlpha(1) end
     end
 end
 
@@ -153,7 +160,7 @@ local function TickGate()
         hintText:SetTextColor(0.3, 1, 0.3)
     else
         ApplyLock()
-        SuppressEnter()
+        SupressEnter()
         hintText:SetText(db.lockedText .. "\n(hold " .. db.modifier .. " to release)")
         hintText:SetTextColor(1, 0.15, 0.15)
     end
