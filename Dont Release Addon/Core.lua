@@ -171,9 +171,7 @@ local function TickGate()
 end
 
 local function StartGate()
-    print("DNR debug: StartGate called, HasSelfRes=" .. tostring(HasSelfRes()))
     if HasSelfRes() then
-        -- a self-res is ready; don't bother gating
         return
     end
     gateActive = true
@@ -233,7 +231,6 @@ frame:RegisterEvent("RESURRECT_REQUEST")
 frame:RegisterEvent("ENCOUNTER_END")
 
 -- Poll once a second while dead so a wipe that develops after our own death
--- (or a trash-pull wipe with no ENCOUNTER_END) still gets caught.
 local wipeWatcher = CreateFrame("Frame")
 
 frame:SetScript("OnEvent", function(self, event, ...)
@@ -249,11 +246,10 @@ frame:SetScript("OnEvent", function(self, event, ...)
     elseif event == "PLAYER_DEAD" then
         wipeConfirmed = false
         if ShouldGate() then
-            -- single deaths don't gate on their own; start watching for a wipe
             wipeWatcher:SetScript("OnUpdate", function()
                 EvaluateWipe()
             end)
-            EvaluateWipe() -- catch the case where the raid was already mostly dead
+            EvaluateWipe() 
         end
 
     elseif event == "PLAYER_ALIVE" or event == "PLAYER_UNGHOST" then
@@ -262,8 +258,6 @@ frame:SetScript("OnEvent", function(self, event, ...)
         ClearGate()
 
     elseif event == "RESURRECT_REQUEST" then
-        -- a rez is incoming right now; get out of the way immediately,
-        -- regardless of gate state
         if gateActive then
             ClearGate(db.rezIncomingText, 0.3, 1, 0.3)
         end
