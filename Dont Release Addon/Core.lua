@@ -140,7 +140,7 @@ local function ClearGate(reasonText, r, g, b)
     if reasonText then
         hintText:SetText(reasonText)
         hintText:SetTextColor(r or 0.3, g or 1, b or 0.3)
-        C_Rimer.After(3, function()
+        C_Timer.After(3, function()
             if not gateActive then hint:Hide() end
         end)
     else
@@ -149,6 +149,7 @@ local function ClearGate(reasonText, r, g, b)
 end
 
 local function TickGate()
+    print("DNR debug: TickGate running")
     if not UnitIsDeadOrGhost("player") then
         ClearGate()
         return
@@ -167,6 +168,7 @@ local function TickGate()
 end
 
 local function StartGate()
+    print("DNR debug: StartGate called, HasSelfRes=" .. tostring(HasSelfRes()))
     if HasSelfRes() then
         -- a self-res is ready; don't bother gating
         return
@@ -211,6 +213,8 @@ local function EvaluateWipe()
     if not ShouldGate() then return end
     if not UnitIsDeadOrGhost("player") then return end
 
+    print("DNR debug: EvaluateWipe running, dead count=" .. CountDeadGroup() .. " threshold=" .. db.wipeThreshold)
+
     if CountDeadGroup() >= db.wipeThreshold then
         wipeConfirmed = true
         if not gateActive then StartGate() end
@@ -243,6 +247,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
 
     elseif event == "PLAYER_DEAD" then
         wipeConfirmed = false
+        print("DNR debug: PLAYER_DEAD fired, ShouldGate=" .. tostring(ShouldGate()))
         if ShouldGate() then
             -- single deaths don't gate on their own; start watching for a wipe
             wipeWatcher:SetScript("OnUpdate", function()
@@ -329,6 +334,3 @@ SlashCmdList["DONTRELEASE"] = function(msg)
         print("  /dnr status")
     end
 end
-
-
-
