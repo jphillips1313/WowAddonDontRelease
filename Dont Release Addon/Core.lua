@@ -13,7 +13,7 @@ local defaults = {
     wipeThreshold = 3,
     skipIfSelfRes= true,
     lockedText = "DO NOT RELEASE",
-    unlockedText = "Thank the Healer Rez incoming",
+    unlockedText = "Are you sure there's no res incoming?",
     rezIncomingText = "Thank you Healer"
 }
 
@@ -153,7 +153,6 @@ local function ClearGate(reasonText, r, g, b)
 end
 
 local function TickGate()
-    print("DNR debug: TickGate running")
     if not UnitIsDeadOrGhost("player") then
         ClearGate()
         return
