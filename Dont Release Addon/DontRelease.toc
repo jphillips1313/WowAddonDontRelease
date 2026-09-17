@@ -1,0 +1,8 @@
+## Interface: 120100, 120105
+## Title: Don't Release
+## Notes: Gates the spirit release button after raid wipes/deaths until you hold a modifier key. Auto clears the instant a rex is incoming
+## Version: 1.0
+## SaveVariables: DontReleaseDB
+## Author: Jack Phillips
+
+core.lua
