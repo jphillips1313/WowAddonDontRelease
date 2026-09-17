@@ -123,4 +123,12 @@ end
 
 -- Gate Lifecycle
 
+local ticker = CreateFrame("Frame")
+
+local function StopTicker()
+    ticker:SetScript("OnUpdate", nil)
+end
+
+
+
 
