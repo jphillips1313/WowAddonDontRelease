@@ -51,21 +51,15 @@ end
 local gateActive = false
 local wipeConfirmed = false
 
-local hint = CreateFrame("Frame", "DontReleaseHint", UIParent, "BackdropTemplate")
+local hint = CreateFrame("Frame", "DontReleaseHint", UIParent)
 hint:SetSize(360, 50)
-hint:SetPoint("TOP", UIParent, "TOP", 0. -160)
+hint:SetPoint("TOP", UIParent, "TOP", 0, -160)
 hint:Hide()
 hint:SetFrameStrata("HIGH")
 
-if hint.SetBackdrop then
-    hint.SetBackdrop({
-        bgFile = "Interface/Tooltips/UI-Tooltip-Background",
-        edgeFile = "Interface/Tooltips/UI-Tooltip-Background",
-        edgeSize = 12,
-        insets = {left = 3, right = 3, top = 3, bottom = 3},
-    })
-    hint:SetBackdropColor(0, 0, 0, 0.6)
-end
+local hintBg = hint:CreateTexture(nil, "BACKGROUND")
+hintBg:SetAllPoints()
+hintBg:SetColorTexture(0, 0, 0, 0.6)
 
 local hintText = hint:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 hintText:SetPoint("CENTER")
