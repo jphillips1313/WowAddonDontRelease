@@ -56,7 +56,7 @@ local wipeConfirmed = false
 
 local hint = CreateFrame("Frame", "DontReleaseHint", UIParent)
 hint:SetSize(360, 50)
-hint:SetPoint("TOP", UIParent, "TOP", 0, -160)
+hint:SetPoint("TOP", UIParent, "TOP", 0, -250)  
 hint:Hide()
 hint:SetFrameStrata("HIGH")
 
@@ -217,8 +217,6 @@ local function EvaluateWipe()
     if not ShouldGate() then return end
     if not UnitIsDeadOrGhost("player") then return end
 
-    print("DNR debug: EvaluateWipe running, dead count=" .. CountDeadGroup() .. " threshold=" .. db.wipeThreshold)
-
     if CountDeadGroup() >= db.wipeThreshold then
         wipeConfirmed = true
         if not gateActive then StartGate() end
@@ -251,7 +249,6 @@ frame:SetScript("OnEvent", function(self, event, ...)
 
     elseif event == "PLAYER_DEAD" then
         wipeConfirmed = false
-        print("DNR debug: PLAYER_DEAD fired, ShouldGate=" .. tostring(ShouldGate()))
         if ShouldGate() then
             -- single deaths don't gate on their own; start watching for a wipe
             wipeWatcher:SetScript("OnUpdate", function()
